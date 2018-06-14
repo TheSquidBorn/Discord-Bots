@@ -1,0 +1,22 @@
+```
+() Required
+[] Optional
+
+!playing (game)
+	Changes the bots status to playing (game)
+
+!wiki (search query)
+	Displays the first 20 results from wikipedia in a list, use the next !wiki command to select item from the list
+
+!wiki (number)
+	Displays the first paragraph from the selected item from the previous !wiki command
+
+!gif (search query)
+	Searces giphy and sends the result
+
+!gtastatus
+	Sends the status from Rockstars Services
+
+!ud (search query)
+	Sends the result from Urban Dictionary
+```
