@@ -1,32 +1,38 @@
 import asyncio
 import discord
+import logging
 from discord import Game
-from discord.ext.commands import Bot
+from discord.ext import commands
 
-BOT_PREFIX = ("!")
+prefix = ("!")
 f = open("token.txt", "r")
 token = f.read()
 
-client = Bot(command_prefix=BOT_PREFIX)
-
-@client.command(pass_context=True)
-async def playing(ctx):
-	game = ctx.message.content
-	game = game.split(" ", 1)[1]
-	await client.change_presence(game=Game(name=game))
-
-@client.command(pass_context=True)
-async def lfg(ctx):
-	user = ctx.message.author
-	role = discord.utils.get(ctx.message.server.roles, name="Looking For Group")
-	if role in [r for r in user.roles]:
-		await client.remove_roles(user, role)
-	else:
-		await client.add_roles(user, role)
-
-@client.event
+startup_extensions = ["members", "sam"]
+bot = commands.Bot(command_prefix='!')
+	
+@bot.event
 async def on_ready():
-	await client.change_presence(game=Game(name="fair, playing pharah"))
-	print("Logged in as " + client.user.name)
+		print('Logged in as')
+		print(bot.user.name)
+		print(bot.user.id)
 
-client.run(token)
+		f = open("playing.txt", "r")
+		game = f.read()
+		f.close
+
+		await bot.change_presence(game=Game(name=game))
+
+if __name__ == "__main__":
+	for extension in startup_extensions:
+		try:
+			bot.load_extension(extension)
+		except Exception as e:
+			exc = '{}: {}'.format(type(e).__name__, e)
+			print('Failed to load extension {}\n{}'.format(extension, exc))
+		else:
+			print("{} loaded.".format(extension))
+
+print(discord.__version__)
+logging.basicConfig(level=logging.INFO)
+bot.run(token)
