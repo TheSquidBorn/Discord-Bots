@@ -5,11 +5,22 @@ from discord import Game
 from discord.ext import commands
 
 prefix = ("!")
-f = open("token.txt", "r")
+f = open("credentials/token.txt", "r")
 token = f.read()
 
+print("Do you want to use a custom Token?")
+if (input() == "y"):
+	token = input()
+
 startup_extensions = ["members", "sam"]
-bot = commands.Bot(command_prefix='!')
+
+description = '''
+S erver
+A ssistance
+M odule
+'''
+
+bot = commands.Bot(command_prefix='!', description=description)
 	
 @bot.event
 async def on_ready():
@@ -17,7 +28,7 @@ async def on_ready():
 		print(bot.user.name)
 		print(bot.user.id)
 
-		f = open("playing.txt", "r")
+		f = open("config/playing.txt", "r")
 		game = f.read()
 		f.close
 
