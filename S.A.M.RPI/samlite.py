@@ -8,9 +8,7 @@ prefix = ("!")
 f = open("credentials/token.txt", "r")
 token = f.read()
 
-print("Do you want to use a custom Token?")
-if (input() == "y"):
-	token = input()
+token = "NDU5Mzg0NTM1MjY4NzIwNjQx.DhvSdw.yLCwesrF9cbHPjHa_pl8kVJebTA"
 
 startup_extensions = ["members", "sam"]
 

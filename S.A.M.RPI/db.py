@@ -24,7 +24,29 @@ def AddPoints(userID, points):
 	sheet.update_cell(c, 3, Integer.valueOf(sheet.cell(c, 3).value) + Integer.valueOf(points))
 
 def MakePoll(name, alternatives):
-	gc = getGC
+	gc = getGC()
 	sh = gc.open("Polls")
-	sh.share('erik.winnerstam@gmail.com', perm_type='user', role='writer')
-	worksheet = sh.worksheet()
+	worksheet = sh.add_worksheet(title=name, rows="1", cols="1")
+	for a in alternatives:
+		worksheet.append_row([a.strip(" "),0])
+	worksheet = sh.worksheet("Votes")
+	worksheet.append_row([name])
+
+def AddVote(id, poll, alternative):
+	gc = getGC()
+	#check if alternative is valid
+	sh = gc.open("Polls")
+	worksheet = sh.worksheet("Votes")
+	cell = worksheet.findall(poll)[0]
+	r = cell.row
+	rCells = worksheet.row_values(r)
+	for rc in rCells:
+		if rc == id:
+			return False
+	values_list = worksheet.row_values(r)
+	values_list.append(id)
+	worksheet.delete_row(r) #put id as votes?
+	worksheet.append_row(values_list)
+	worksheet = sh.worksheet(poll)
+	cell = worksheet.findall(alternative)[0]
+	worksheet.update_cell(cell.row, 2, int(worksheet.cell(cell.row, 2).value) + 1)

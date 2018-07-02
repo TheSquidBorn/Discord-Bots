@@ -22,7 +22,7 @@ class sam():
 	async def stop(self, ctx):
 		"""Stops the bot"""
 		server = ctx.message.server
-		if admin.IsAdmin(ctx.message.author, server):
+		if admin.HasAdmin(ctx.message.author, server):
 			await self.client.say("Ah fuck, can't belive you done this.")
 			await self.client.logout()
 		else:

@@ -29,5 +29,32 @@ class members():
 		points = args[2]
 		db.AddPoints(user, points)
 
+	@commands.command(pass_context=True)
+	async def makepoll(self,ctx):
+		user = ctx.message.author
+		server = ctx.message.server
+		if admin.HasAdmin(user, server):
+			text = ctx.message.content.split(" ", 1)[1]
+			name = text.split(" ")[0]
+			text = text.split(" ", 1)[1]
+			alternatives = text.split(",")
+			for a in alternatives:
+				a = a.strip(" ")
+			db.MakePoll(name, alternatives)
+			self.client.say("Made poll!")
+		else:
+			self.client.say("hey for security reasons(mostly bc squid is not that good at programming) polls can only be created by admins, just ask one and theyll set one up")
+
+	@commands.command(pass_context=True)
+	async def vote(self,ctx):
+		id = ctx.message.author.id
+		text = ctx.message.content.split(" ", 2)
+		poll = text[1]
+		alternative = text[2]
+		if db.AddVote(id, poll, alternative):
+			self.client.say("Voted")
+		else:
+			self.client.say("You have already Voted")
+
 def setup(client):
 	client.add_cog(members(client))
