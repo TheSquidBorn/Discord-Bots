@@ -8,7 +8,7 @@ prefix = ("!")
 f = open("credentials/token.txt", "r")
 token = f.read()
 
-token = "NDU5Mzg0NTM1MjY4NzIwNjQx.DhvSdw.yLCwesrF9cbHPjHa_pl8kVJebTA"
+token = "NDU5Mzg0NTM1MjY4NzIw
 
 startup_extensions = ["members", "sam"]
 
