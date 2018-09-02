@@ -16,12 +16,9 @@ def AddUser(user):
 	sheet.append_row(values)
 	return True
 
-def AddPoints(userID, points):
-	sheet = getSheet()
-	if not sheet.findall(userID):
-		AddUser(user)
-	c = sheet.findall(userID)[0].col
-	sheet.update_cell(c, 3, Integer.valueOf(sheet.cell(c, 3).value) + Integer.valueOf(points))
+def saidVore(user):
+	sheet = getGC().open("Vore").sheet1
+	
 
 def MakePoll(name, alternatives):
 	gc = getGC()
@@ -50,3 +47,12 @@ def AddVote(id, poll, alternative):
 	worksheet = sh.worksheet(poll)
 	cell = worksheet.findall(alternative)[0]
 	worksheet.update_cell(cell.row, 2, int(worksheet.cell(cell.row, 2).value) + 1)
+
+def getPolls():
+	gc = getGC()
+	sh = gc.open("Polls")
+	return sh.sheet1.col_values(1)
+
+def getPoll(poll):
+	gc = getGC()
+	return gc.open("Polls").worksheet(poll)

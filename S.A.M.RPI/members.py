@@ -56,5 +56,21 @@ class members():
 		else:
 			self.client.say("You have already Voted")
 
+	@commands.command()
+	async def polls(self):
+		polls = db.getPolls()
+		string = "```Polls:"
+		for p in polls:
+			string += "\n*" + p
+		string += "```"
+		await self.client.say(string)
+
+	@commands.command(pass_context=True)
+	async def poll(self, ctx):
+		poll = db.getPoll(ctx.message.content.split(" ", 1)[1])
+		colors = [":one:",":two:",":three:",":four:",":five:",":six:"]
+		p = poll.get_alldict_values()
+		await self.client.say(poll)
+
 def setup(client):
 	client.add_cog(members(client))
