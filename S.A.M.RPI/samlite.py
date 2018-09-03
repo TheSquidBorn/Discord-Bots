@@ -1,5 +1,3 @@
-import asyncio
-import admin
 import discord
 import logging
 import requests
@@ -59,16 +57,16 @@ async def apod_task():
 	await bot.wait_until_ready()
 	channel = discord.Object(id='485891401691955211')
 	while not bot.is_closed:
+		time = datetime.now() + timedelta(days=1)
+		time.replace(hour=8,minute=0,second=0,microsecond=0)
+		delta = time - datetime.today()
+		seconds = delta.total_seconds()
+		await asyncio.sleep(seconds)
 		r = requests.get("https://api.nasa.gov/planetary/apod?api_key=JxHACldWATN21OaEW2MGZfpuzIRYMJIeLqZd1SWV").json()
 		url = r["url"]
 		if (url.startswith("https://www.youtube.com/embed/")):
 			url = url.strip("https://www.youtube.com/embed/")
 			url = "https://www.youtube.com/watch?v=" + url
-		time = datetime.now() + timedelta(days=1)
-		time.replace(hour=8,minute=0,second=0,microsecond=0)
-		delta = time - datetime.today()
-		seconds = delta.total_seconds() 
-		await asyncio.sleep(60 * seconds)
 		await bot.send_message(channel, url)
 
 if __name__ == "__main__":
