@@ -65,7 +65,7 @@ async def apod_task():
 		seconds = int(delta.total_seconds())
 		print("sleeping for " + str(seconds) + " seconds")
 		await asyncio.sleep(seconds)
-		r = requests.get("https://api.nasa.gov/planetary/apod?api_key=JxHACldWATN21OaEW2MGZfpuzIRYMJIeLqZd1SWV").json()
+		r = requests.get("https://api.nasa.gov/planetary/apod?api_key=").json()
 		url = r["url"]
 		if (url.startswith("https://www.youtube.com/embed/")):
                         url = url.strip("https://www.youtube.com/embed/")
