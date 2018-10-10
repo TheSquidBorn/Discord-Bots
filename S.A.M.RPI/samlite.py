@@ -3,14 +3,14 @@ import admin
 import discord
 import logging
 import requests
-from datetime import datetime, timedelta
+import urllib.request 
+import tasks
 from discord import Game
 from discord.ext import commands
 
 prefix = ("!")
 f = open("credentials/token.txt", "r")
 token = f.read()
-
 startup_extensions = ["members", "sam"]
 
 description = '''
@@ -23,15 +23,14 @@ bot = commands.Bot(command_prefix='!', description=description)
 
 @bot.event
 async def on_ready():
-		print('Logged in as')
-		print(bot.user.name)
-		print(bot.user.id)
+	print('Logged in as')
+	print(bot.user.name)
+	print(bot.user.id)
 
-		f = open("config/playing.txt", "r")
-		game = f.read()
-		f.close
-
-		await bot.change_presence(game=Game(name=game))
+	f = open("config/playing.txt", "r")
+	game = f.read()
+	f.close
+	await bot.change_presence(game=Game(name=game))
 
 @bot.command(pass_context=True)
 async def load(ctx, extension_name : str):
@@ -55,24 +54,6 @@ async def unload(ctx, extension_name : str):
 	else:
 		await self.client.say("Who dis")
 
-async def apod_task():
-	await bot.wait_until_ready()
-	channel = discord.Object(id='485891401691955211')
-	while not bot.is_closed:
-		time = datetime.now() + timedelta(days=1)
-		time = time.replace(hour=8,minute=0,second=0,microsecond=0)
-		delta = time - datetime.today()
-		seconds = int(delta.total_seconds())
-		print("sleeping for " + str(seconds) + " seconds")
-		await asyncio.sleep(seconds)
-		r = requests.get("https://api.nasa.gov/planetary/apod?api_key=").json()
-		url = r["url"]
-		if (url.startswith("https://www.youtube.com/embed/")):
-                        url = url.strip("https://www.youtube.com/embed/")
-                        url = "https://www.youtube.com/watch?v=" + url
-		print("sending message")
-		await bot.send_message(channel, url)
-
 if __name__ == "__main__":
 	for extension in startup_extensions:
 		try:
@@ -83,6 +64,6 @@ if __name__ == "__main__":
 		else:
 			print("{} loaded.".format(extension))
 
-bot.loop.create_task(apod_task())
+bot.loop.create_task(tasks.apod(bot))
 print(discord.__version__)
 bot.run(token)
