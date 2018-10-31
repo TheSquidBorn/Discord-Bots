@@ -59,6 +59,10 @@ class sam():
 		string += "```"
 		await self.client.say(string)
 
+	@commands.command(pass_context=True)
+	async def lmg(self, ctx, query):
+		await self.client.say("http://lmgtfy.com/?q=" + query)
+
 	@commands.command()
 	async def adopt_maja(self):
 		await self.client.say("Already did that")
