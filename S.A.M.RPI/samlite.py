@@ -66,4 +66,9 @@ if __name__ == "__main__":
 
 bot.loop.create_task(tasks.apod(bot))
 print(discord.__version__)
-bot.run(token)
+while True:
+	try:
+		bot.loop.run_until_complete(bot.run(token))
+	except BaseExeption:
+		print("Reconnecting...")
+		time.sleep(5)
