@@ -3,8 +3,10 @@ import admin
 import discord
 import logging
 import requests
+import time
 import urllib.request 
 import tasks
+import servers
 from discord import Game
 from discord.ext import commands
 
@@ -18,6 +20,8 @@ S erver
 A ssistance
 M odule
 '''
+
+logging.basicConfig(level=logging.INFO)
 
 bot = commands.Bot(command_prefix='!', description=description)
 
@@ -65,10 +69,8 @@ if __name__ == "__main__":
 			print("{} loaded.".format(extension))
 
 bot.loop.create_task(tasks.apod(bot))
+bot.loop.create_task(servers.status(bot, "81.236.213.170"))
 print(discord.__version__)
-while True:
-	try:
-		bot.loop.run_until_complete(bot.run(token))
-	except BaseExeption:
-		print("Reconnecting...")
-		time.sleep(5)
+
+bot.loop.run_until_complete(bot.run(token))
+

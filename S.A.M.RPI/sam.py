@@ -34,6 +34,8 @@ class sam():
 	async def stop(self, ctx):
 		"""Stops the bot"""
 		server = ctx.message.server
+		print("User stopped bot")
+		print(ctx.message.author)
 		if admin.HasAdmin(ctx.message.author, server):
 			await self.client.say("Ah fuck, can't belive you done this.")
 			await self.client.logout()
@@ -58,10 +60,6 @@ class sam():
 			string += p["craft"] + "\n"
 		string += "```"
 		await self.client.say(string)
-
-	@commands.command(pass_context=True)
-	async def lmg(self, ctx, query):
-		await self.client.say("http://lmgtfy.com/?q=" + query)
 
 	@commands.command()
 	async def adopt_maja(self):
