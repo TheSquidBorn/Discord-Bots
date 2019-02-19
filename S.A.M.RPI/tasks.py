@@ -1,4 +1,4 @@
-import admin
+import sam_util
 import asyncio
 import discord
 import requests
@@ -6,35 +6,37 @@ import os
 from datetime import datetime, timedelta
 from discord.ext import commands
 
-async def apod(client):
-	await client.wait_until_ready()
-	channel = discord.Object(id='485891401691955211')
-	while not client.is_closed:
-		seconds = getSeconds(8,00)
-		print("sleeping for " + str(seconds) + " seconds")
-		await asyncio.sleep(seconds)
-		channel = discord.Object(id='485891401691955211')
-		r = requests.get("https://api.nasa.gov/planetary/apod?api_key=JxHACldWATN21OaEW2MGZfpuzIRYMJIeLqZd1SWV").json()
-		title = "**" + r["title"] + "**\n"
-		text = r["explanation"]
-		url = r["url"]
-		if url.split(".")[-1] == "jpg":
-			with open('apod/image.jpg', 'wb') as f:
-				f.write(requests.get(url).content)
-			await client.send_file(channel, "apod/image.jpg")
-			os.remove("apod/image.jpg")
-		elif url.split(".")[-1] == "gif":
-			with open('apod/image.gif', 'wb') as f:
-				f.write(requests.get(url).content)
-			await client.send_file(channel, "apod/image.gif")
-			os.remove("apod/image.gif")
-		else:
-			await client.send_message(channel, r["url"])
-		await client.send_message(channel, (title + text))
+async def apod(bot):
+    await bot.wait_until_ready()
+    channel = discord.Object(id="485891401691955211")
+    while not bot.is_closed:
+        seconds = getSeconds(8, 00)
+        print("sleeping for " + str(seconds) + " seconds")
+        await asyncio.sleep(seconds)
+
+        r = requests.get("https://api.nasa.gov/planetary/apod?api_key=JxHACldWATN21OaEW2MGZfpuzIRYMJIeLqZd1SWV").json()
+        title = "**" + r["title"] + "**\n"
+        text = r["explanation"]
+        url = ["url"]
+        if url.split(".")[-1] == "jpg":
+            with open('image.jpg', 'wb') as f:
+                f.write(requests.get(url).content)
+                await bot.send_file(channel, "image.jpg")
+                os.remove("image.jpg")
+        elif url.split(".")[-1] == "gif":
+            with open('image.gif', 'wb') as f:
+                f.write(requests.get(url).content)
+            await bot.send_file(channel, "image.gif")
+            os.remove("image.gif")
+        else:
+            await bot.send_message(channel, r["url"])
+        await bot.send_message(channel, (title + text))
 
 def getSeconds(hour, minute):
-	time = datetime.now() + timedelta(days=1)
-	time = time.replace(hour=hour,minute=minute,second=0,microsecond=0)
-	delta = time - datetime.today()
-	seconds = int(delta.total_seconds())
-	return seconds
+    time = datetime.now()
+    if time.hour > hour - 1:
+        time += timedelta(days=1)
+    time = time.replace(hour=hour,minute=minute,second=0,microsecond=0)
+    delta = time - datetime.today()
+    seconds = int(delta.total_seconds())
+    return seconds
