@@ -1,19 +1,17 @@
 import asyncio
 import sam_util
 import discord
-import getpass
 import json
 import os
 import tasks
 import logging
-
 from discord import Game
 from discord.ext import commands
 
 if not os.path.exists("config.json"):
     print("Config file does not exist, creating new one and closing.")
     data = {}
-    fields = ["token", "prefix", "game", "server", "logging", "apodkey"]
+    fields = ["token", "prefix", "playing", "server", "logging", "apodkey", "apodtime"]
     for fi in fields:
         data[fi] = ""
     with open("config.json", 'w') as f:
@@ -23,11 +21,11 @@ config = sam_util.getCfg()
 
 token   = config["token"]
 prefix  = config["prefix"]
-game    = config["game"]
+game    = config["playing"]
 server  = config["server"]
-logging = config["logging"]
+loggingLevel = config["logging"]
 
-startup_extensions = ["sam"]
+startup_extensions = ["sam", "monster", "duel", "c"]
 bot = commands.Bot(command_prefix=prefix)
 
 @bot.event
@@ -44,9 +42,9 @@ async def load(ctx, extension_name : str):
         try:
             bot.load_extension(extension_name)
         except (AttributeError, ImportError) as e:
-            await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
+            await self.bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
             return
-            await bot.say("{} loaded.".format(extension_name))
+            await self.bot.say("{} loaded.".format(extension_name))
     else:
         await self.bot.say("Who dis")
 
@@ -67,8 +65,15 @@ if __name__ == "__main__":
             exc = '{}: {}'.format(type(e).__name__, e)
             print('Failed to load extension {}\n{}'.format(extension, exc))
         else:
-            print("{} loaded.".format(extension))
+            print("{} loaded".format(extension))
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 bot.loop.create_task(tasks.apod(bot))
+bot.loop.create_task(tasks.server(bot))
 print(discord.__version__)
-bot.loop.run_until_complete(bot.run(token))
+bot.run(token)

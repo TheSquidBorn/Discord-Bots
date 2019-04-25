@@ -2,6 +2,7 @@ import sam_util
 import asyncio
 import discord
 import requests
+from bs4 import BeautifulSoup
 from datetime import datetime
 from threading import Timer
 from discord.ext import commands
@@ -49,6 +50,14 @@ class sam():
             string += p["craft"] + "\n"
         string += "```"
         await self.bot.say(string)
+
+    @commands.command()
+    async def number(self, *, number):
+        number = number.replace(" ","")
+        response = requests.get("https://www.180.se/nummer/" + number)
+        soup=BeautifulSoup(response.text)
+        pct = soup.find('span',{'class':'ai-value ai-small'}).text
+        await self.bot.say(pct + "\nhttps://www.180.se/nummer/" + number)
 
 def setup(bot):
     bot.add_cog(sam(bot))

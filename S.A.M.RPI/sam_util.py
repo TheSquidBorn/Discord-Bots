@@ -20,7 +20,7 @@ def changeCfg(key, value):
     config[key] = value
 
     with open("config.json", "w") as f:
-        json.dump(config, f)
+       json.dump(config, f, indent=4, sort_keys=True) 
 
 def getCfg():
     with open("config.json", "r") as f:
